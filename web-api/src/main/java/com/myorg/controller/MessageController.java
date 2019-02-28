@@ -1,8 +1,10 @@
 package com.myorg.controller;
 
+import com.myorg.service.MensajesService;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +16,7 @@ import java.util.Date;
 
 import com.twilio.twiml.messaging.Body;
 import com.twilio.twiml.MessagingResponse;
-import com.twilio.twiml.TwiMLException;
+
 
 @RestController
 @RequestMapping(path = "/api/messages")
@@ -22,6 +24,9 @@ public class MessageController {
 
     public static final String ACCOUNT_SID = "AC6fb6b605dfdaa34584cc995069382573";
     public static final String AUTH_TOKEN = "096a2b3f5c5e933cae33c46410f74cdc";
+
+    @Autowired
+    MensajesService service;
 
     @RequestMapping(path = "/test", method = RequestMethod.GET)
     public String test() {
@@ -39,17 +44,11 @@ public class MessageController {
     public void reply(HttpServletRequest request, HttpServletResponse response){
 
         String body = request.getParameter("Body");
-        String message = "Message";
-        if (body.equals("hello")) {
-            // Say hi
-            message = "Hi there!";
-        } else if (body.equals("bye")) {
-            // Say goodbye
-            message = "Goodbye!";
-        }
+
+        String respuesta = service.findRespuesta(body);
 
         // Create a TwiML response and add our friendly message.
-        Body messageBody = new Body.Builder(message).build();
+        Body messageBody = new Body.Builder(respuesta).build();
         com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder().body(messageBody).build();
         MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
 

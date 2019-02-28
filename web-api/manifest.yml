@@ -1,0 +1,10 @@
+---
+applications:
+  - name: belsap
+    #memory: 256M
+    #random-route: true
+    path: build/libs/belsap-api-1.0-SNAPSHOT.jar
+    #env:
+    #  SPRING_PROFILES_ACTIVE: cloud,mysql
+    #services:
+    #  - spring-bootstrap-db

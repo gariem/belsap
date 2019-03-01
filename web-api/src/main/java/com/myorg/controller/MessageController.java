@@ -4,20 +4,19 @@ import com.myorg.DataLoader;
 import com.myorg.service.MensajeService;
 import com.myorg.service.TwilioService;
 import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
+import com.twilio.twiml.MessagingResponse;
+import com.twilio.twiml.messaging.Body;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
-import com.twilio.twiml.messaging.Body;
-import com.twilio.twiml.MessagingResponse;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 @RestController
@@ -35,40 +34,48 @@ public class MessageController {
 
     @RequestMapping(path = "/daily", method = RequestMethod.GET)
     public String daily() {
-
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-
         service.sendMessageDiario(DataLoader.INICIAR_DIARIO, "all");
+        return "OK: " + new Date().toString();
+    }
+
+    @RequestMapping(path = "/dailyvideo", method = RequestMethod.GET)
+    public String dailyVideo() {
+        service.sendMessageDiario(DataLoader.DIARIO_VIDEO, "all");
+
+        return "OK: " + new Date().toString();
+    }
+
+    @RequestMapping(path = "/pregunta", method = RequestMethod.GET)
+    public String pregunta() {
+        service.sendMessageDiario(DataLoader.PREGUNTA, "all");
+
+        return "OK: " + new Date().toString();
+    }
+
+    @RequestMapping(path = "/final", method = RequestMethod.GET)
+    public String finalWe() {
+        service.sendMessageDiario(DataLoader.FINAL, "all");
 
         return "OK: " + new Date().toString();
     }
 
     @RequestMapping(path = "/test", method = RequestMethod.GET)
     public String test() {
-
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-
         twilioService.sendMessage("+14155238886", "+51955179518", "Mensaje de prueba: " + new Date().toString());
-
         return "Fecha: " + new Date().toString();
     }
 
-
-
     @RequestMapping(path = "/receive", method = RequestMethod.POST)
-    public void reply(HttpServletRequest request, HttpServletResponse response){
-
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+    public void reply(HttpServletRequest request, HttpServletResponse response) {
 
         String body = request.getParameter("Body");
         String from = request.getParameter("From");
 
-        String respuesta = service.findRespuesta(body);
+        String respuesta = service.findRespuesta(body, from);
 
-        // Create a TwiML response and add our friendly message.
-        Body messageBody = new Body.Builder(respuesta).build();
-        com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder().body(messageBody).build();
-        MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
+        respuesta = new String(respuesta.getBytes(UTF_8), ISO_8859_1);
+
+        MessagingResponse twiml = twilioService.response(respuesta);
 
         response.setContentType("application/xml");
 

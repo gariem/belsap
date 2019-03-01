@@ -35,7 +35,7 @@ public class MensajeService {
     }
 
 
-    public String findRespuesta(String pregunta) {
+    public String findRespuesta(String pregunta, String contact) {
         String respuesta = "No te entiendo!";
         List<ReglaMensaje> posiblesRespuestas = reglaRepository.findByPregunta(pregunta);
 
@@ -74,13 +74,13 @@ public class MensajeService {
                 twilioService.sendMessage("+14155238886", contact.getNumber(), mensaje);
             }
 
-            if (type == DataLoader.DIARIO_VIDEO) {
+            if (type == DataLoader.DIARIO_VIDEO || type == DataLoader.PREGUNTA) {
                 List<ReglaMensaje> reglas = reglaRepository.findAllByTipo(type);
 
                 for (ReglaMensaje regla : reglas) {
                     if (!contactoVideos.containsKey(from + "_" + regla.getId())) {
                         contactoVideos.put(from + "_" + regla.getId(), 1);
-                        mensaje = regla.getPregunta() + "#break#" + regla.getRespuesta();
+                        mensaje = regla.getPregunta() + "\n" + regla.getRespuesta();
 
                         twilioService.sendMessage("+14155238886", contact.getNumber(), mensaje);
                     }

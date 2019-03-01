@@ -44,7 +44,7 @@ public class DataLoader implements CommandLineRunner {
                 "2. Eau de Parfum \n" +
                 "3. Parfum \n" +
                 "4. Elixires o Esencias", "");
-        ReglaMensaje regla9 = new ReglaMensaje(8, RESPUESTA, "3", "Muy bien! \uD83C\uDF89 \n Parfum tiene una duración y concentración muy alta.");
+        ReglaMensaje regla9 = new ReglaMensaje(8, RESPUESTA, "3", "Muy bien!\nParfum tiene una duración y concentración muy alta.");
         ReglaMensaje regla10 = new ReglaMensaje(10, FINAL, "Final de la semana: Felicitaciones! Has logrado superar este reto!! Por ello, alguien muy especial para nosotros tiene algo que decirte!!", "https://youtu.be/kECZZIltRIw");
 
         ReglaMensaje regla11 = new ReglaMensaje(11, RESPUESTA, "Hola","Hola Fran! ¿En qué puedo ayudarte?");

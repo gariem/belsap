@@ -58,6 +58,7 @@ public class MensajeService {
     public void sendMessageDiario(String type, String from) {
         String mensaje = null;
 
+
         List<Contact> contacts = null;
 
         if (from == "all") {
@@ -79,7 +80,7 @@ public class MensajeService {
 
                 for (ReglaMensaje regla : reglas) {
                     if (!contactoVideos.containsKey(from + "_" + regla.getId())) {
-                        contactoVideos.put(from + "_" + regla.getId(), 1);
+                        //contactoVideos.put(from + "_" + regla.getId(), 1);
                         mensaje = regla.getPregunta() + "\n" + regla.getRespuesta();
 
                         twilioService.sendMessage("+14155238886", contact.getNumber(), mensaje);
@@ -89,6 +90,24 @@ public class MensajeService {
 
         }
 
+    }
+
+
+    public void sendMedia (String from, String URL)
+    {
+        List<Contact> contacts = null;
+
+        if (from == "all") {
+            contacts = contactRepository.findAll();
+        } else {
+            contacts = contactRepository.findAllByNumber(from);
+        }
+
+        for (Contact contact : contacts) {
+                        twilioService.sendImage( "+14155238886", contact.getNumber(), URL);
+
+
+        }
     }
 
 }

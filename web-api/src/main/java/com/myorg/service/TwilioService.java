@@ -6,6 +6,9 @@ import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.type.PhoneNumber;
 import org.springframework.stereotype.Service;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TwilioService {
@@ -15,8 +18,17 @@ public class TwilioService {
 
     public void sendMessage(String from, String to, String message) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
         Message.creator(new PhoneNumber("whatsapp:" + to), new PhoneNumber("whatsapp:" + from), message).create();
     }
+
+    public void sendImage(String from, String to, String URL) {
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        List<URI> listURI= new ArrayList<>();
+        listURI.add( URI.create(URL));
+        Message.creator(new PhoneNumber("whatsapp:" + to), new PhoneNumber("whatsapp:" + from), listURI).create();
+    }
+
 
     public MessagingResponse response(String mensaje) {
 

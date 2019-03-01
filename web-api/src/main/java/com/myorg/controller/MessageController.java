@@ -64,6 +64,11 @@ public class MessageController {
         twilioService.sendMessage("+14155238886", "+51955179518", "Mensaje de prueba: " + new Date().toString());
         return "Fecha: " + new Date().toString();
     }
+    @RequestMapping(path = "/images", method = RequestMethod.GET)
+    public String images() {
+        twilioService.sendImage("+14155238886", "+51955179518","https://cdn1-marcas.belcorp.biz/pe/wp-content/uploads/sites/11/2019/02/Conoce-el-mundo-con-la-Nueva-Fragancia-Mia-de-Esika-1.jpg" );
+        return "Fecha: " + new Date().toString();
+    }
 
     @RequestMapping(path = "/receive", method = RequestMethod.POST)
     public void reply(HttpServletRequest request, HttpServletResponse response) {

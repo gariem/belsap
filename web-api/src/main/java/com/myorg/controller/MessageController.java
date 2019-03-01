@@ -1,6 +1,8 @@
 package com.myorg.controller;
 
-import com.myorg.service.MensajesService;
+import com.myorg.DataLoader;
+import com.myorg.service.MensajeService;
+import com.myorg.service.TwilioService;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -26,24 +28,40 @@ public class MessageController {
     public static final String AUTH_TOKEN = "096a2b3f5c5e933cae33c46410f74cdc";
 
     @Autowired
-    MensajesService service;
+    MensajeService service;
+
+    @Autowired
+    TwilioService twilioService;
+
+    @RequestMapping(path = "/daily", method = RequestMethod.GET)
+    public String daily() {
+
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
+        service.sendMessageDiario(DataLoader.INICIAR_DIARIO, "all");
+
+        return "OK: " + new Date().toString();
+    }
 
     @RequestMapping(path = "/test", method = RequestMethod.GET)
     public String test() {
 
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
-        Message message = Message.creator(new PhoneNumber("whatsapp:+51955179518"),
-                new PhoneNumber("whatsapp:+14155238886"),
-                "Mensaje de prueba: " + new Date().toString()).create();
+        twilioService.sendMessage("+14155238886", "+51955179518", "Mensaje de prueba: " + new Date().toString());
 
-        return "SID: " + message.getSid() + " Fecha: " + new Date().toString();
+        return "Fecha: " + new Date().toString();
     }
+
+
 
     @RequestMapping(path = "/receive", method = RequestMethod.POST)
     public void reply(HttpServletRequest request, HttpServletResponse response){
 
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
         String body = request.getParameter("Body");
+        String from = request.getParameter("From");
 
         String respuesta = service.findRespuesta(body);
 

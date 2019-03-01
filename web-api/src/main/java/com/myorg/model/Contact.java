@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -12,13 +11,12 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class ReglaMensaje {
+public class Contact {
 
     @Id
-    int id;
-    String tipo;
-    @Column(columnDefinition = "TEXT")
-    String pregunta;
-    @Column(columnDefinition = "TEXT")
-    String respuesta;
+    private int id;
+    private String number;
+    private String name;
+    private String role;
+
 }

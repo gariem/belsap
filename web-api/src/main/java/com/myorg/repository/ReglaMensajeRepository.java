@@ -9,4 +9,8 @@ public interface ReglaMensajeRepository extends CrudRepository<ReglaMensaje, Int
 
     List<ReglaMensaje> findByPregunta(String pregunta);
 
+    ReglaMensaje findFirstByTipo(String tipo);
+
+    List<ReglaMensaje> findAllByTipo(String tipo);
+
 }
